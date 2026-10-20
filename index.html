@@ -95,6 +95,32 @@ button.act.hot{background:var(--accent);color:var(--paper)}
 #pname{text-align:center;font-size:13px;color:var(--dim);min-height:18px}
 footer{font-size:11px;color:#6e6350;line-height:1.7;text-align:center;margin-top:4px}
 @media (prefers-reduced-motion: reduce){#cue{animation:none}}
+/* v5 — 낱말 뜻풀이 */
+.gw{font-style:normal;border-bottom:2px dotted var(--accent);cursor:pointer;padding-bottom:1px}
+#wplate{position:absolute;left:50%;bottom:7px;transform:translateX(-50%);max-width:92%;
+  background:#14100b;color:var(--paper);border:2px solid var(--accent);padding:4px 10px;
+  font-size:11px;line-height:1.5;opacity:0;transition:opacity .2s;pointer-events:none;
+  z-index:5;text-align:center}
+#wplate.on{opacity:1}
+#wplate b{color:#d9893b;font-weight:normal;margin-right:7px}
+/* v5 — 거리 고르기 · 지난 대사 */
+button.act.nav{font-size:12px;padding:6px 13px;min-width:0;background:transparent;color:var(--dim);
+  border:2px solid var(--dim);box-shadow:none}
+button.act.nav:active{transform:translate(1px,1px);box-shadow:none}
+#ovl.scrolly{justify-content:flex-start}
+.mlist{display:flex;flex-direction:column;gap:5px;width:min(330px,96%);text-align:left}
+.mh{font-size:11px;color:var(--dim);letter-spacing:2px;margin-top:7px}
+button.mrow{font-family:inherit;font-size:13px;padding:8px 10px;background:#1d1711;color:var(--paper);
+  border:2px solid var(--dim);border-radius:0;cursor:pointer;text-align:left;width:100%;
+  line-height:1.4;touch-action:manipulation}
+button.mrow .no{color:var(--accent);margin-right:8px}
+button.mrow .md{display:block;font-size:11px;color:var(--dim);margin-top:2px}
+button.mrow.now{border-color:var(--accent)}
+button.mrow:active{transform:translate(1px,1px)}
+.loglist{width:min(340px,96%);text-align:left;font-size:12.5px;line-height:1.6}
+.loglist p{margin:0 0 9px}
+.loglist b{color:var(--accent);font-weight:normal;margin-right:6px}
+.loglist .gw{border-bottom-color:#d9893b}
 </style>
 
 <div id="wrap">
@@ -109,6 +135,7 @@ footer{font-size:11px;color:#6e6350;line-height:1.7;text-align:center;margin-top
     <canvas id="cv" width="320" height="180"></canvas>
     <div id="plate"></div>
     <div id="score">엽전 0</div>
+    <div id="wplate"></div>
     <div id="ovl"></div>
   </div>
   <div id="dlg"><span id="who"></span><span id="txt"></span><span id="cue" hidden>▼ 짚어서 넘기기</span></div>
@@ -116,6 +143,7 @@ footer{font-size:11px;color:#6e6350;line-height:1.7;text-align:center;margin-top
   <div id="progrow"></div>
   <div id="pname"></div>
   <footer>대사는 화면이나 글상자를 짚으면 넘어갑니다 (키보드: Space)<br>
+  <span style="color:#b5402e">점선 친 낱말</span>을 짚으면 뜻이 뜹니다 · 놓친 대사는 &lsquo;지난 대사&rsquo;, 건너뛰려면 &lsquo;거리 고르기&rsquo;<br>
   전승 구성 — 첫째 마당: 박첨지유람·피조리·꼭두각시·이시미 / 둘째 마당: 매사냥·상여·절 짓고 허는 거리<br>
   국가무형유산 남사당놀이의 인형극 '덜미'를 바탕으로 함 · 서체: Galmuri(자유 서체)</footer>
 </div>
@@ -133,7 +161,7 @@ var elWho=document.getElementById('who'), elTxt=document.getElementById('txt'),
     elOvl=document.getElementById('ovl'), elProg=document.getElementById('progrow'),
     elPname=document.getElementById('pname'), elDlg=document.getElementById('dlg'),
     elStage=document.getElementById('stagebox'), elPlate=document.getElementById('plate'),
-    elScore=document.getElementById('score'),
+    elScore=document.getElementById('score'), elW=document.getElementById('wplate'),
     tgM=document.getElementById('tgM'), tgS=document.getElementById('tgS');
 
 /* ---------- 소리: 효과음 + 굿거리 장단 배경 ---------- */
@@ -410,6 +438,93 @@ var INTRO={
  '평안감사':'갓 부임한 높은 벼슬아치',
  '상제':'평안감사의 상주'
 };
+/* ---------- v5: 낱말 뜻풀이 ---------- */
+var WORDS={
+ '산받이':'포장 밖에 앉아 인형과 말을 주고받는 진행자.',
+ '박첨지':'팔도 유람 다니는 허풍쟁이 영감. 이 놀음을 끌고 간다.',
+ '꼭두각시':'박첨지의 본처. 이 놀음의 제목이 된 인형.',
+ '대잡이':'포장 안에서 막대로 인형을 받쳐 드는 조종사.',
+ '포장':'무대가 되는 천막. 이 천 뒤에 대잡이가 숨는다.',
+ '덜미':'남사당 여섯 놀이 중 인형극. 목덜미를 잡고 논다는 뜻.',
+ '거리':'이야기 한 토막. 그 토막들을 묶은 것이 마당.',
+ '첨지':'조선 때 벼슬 이름. 나이 든 남자를 낮춰 부르는 말로도 썼다.',
+ '웃녘':'서울 위쪽 지방.',
+ '팔도':'조선 팔도, 곧 전국.',
+ '유람':'여기저기 구경하며 돌아다니는 것.',
+ '풍악':'잔치나 놀이판에서 울리는 음악.',
+ '장단':'북과 징이 치는 가락의 박자.',
+ '구경값':'놀이를 본 값. 요즘의 관람료.',
+ '피조리':'박첨지의 조카딸로 나오는 젊은 여자 인형.',
+ '상좌중':'절에서 심부름하는 어린 중.',
+ '염불':'불경을 소리 내어 외우는 일.',
+ '목탁':'중이 두드리는 나무 방울.',
+ '잿밥':'제사상에 올린 밥. 겉일 말고 딴 속셈을 가리킨다.',
+ '혼비백산':'넋이 나가 흩어질 만큼 놀라는 것.',
+ '줄행랑':'뒤도 안 돌아보고 달아나는 것.',
+ '조강지처':'가난할 때부터 함께 고생한 본처.',
+ '세간':'살림에 쓰는 온갖 물건.',
+ '작은집':'첩, 또는 첩이 사는 집.',
+ '덜머리집':'박첨지가 새로 얻은 첩.',
+ '뒷간':'옛날 변소.',
+ '금강산':'강원도의 명산. 세상을 버리고 들어간다는 말에 흔히 쓰인다.',
+ '이시미':'용이 되려다 못 된 큰 구렁이.',
+ '대들보':'지붕을 받치는 가장 굵은 나무.',
+ '홍동지':'박첨지의 조카. 벌거벗은 붉은 몸의 장사.',
+ '평안감사':'평안도를 다스리러 새로 부임한 높은 벼슬아치.',
+ '감영':'감사가 일을 보던 관청.',
+ '부임':'새 벼슬자리로 가는 것.',
+ '몰이꾼':'짐승을 몰아 사냥을 돕는 사람.',
+ '매사냥':'길들인 매를 날려 꿩을 잡는 사냥.',
+ '상제':'초상을 치르는 상주.',
+ '급살':'갑자기 죽는 것.',
+ '상여':'주검을 싣고 묏자리로 가는 가마.',
+ '상두꾼':'상여를 메고 가는 사람.',
+ '명당':'터가 아주 좋다는 자리.',
+ '법당':'절에서 부처를 모신 본채.',
+ '단청':'기둥과 처마에 입히는 울긋불긋한 색칠.',
+ '엽전':'가운데 네모 구멍이 뚫린 옛날 돈.'
+};
+var WRX=(function(){
+  var ks=Object.keys(WORDS).sort(function(a,b){return b.length-a.length;});
+  return new RegExp('('+ks.join('|')+')','g');
+})();
+function esc(t){return String(t).replace(/[&<>]/g,function(c){
+  return c==='&'?'&amp;':(c==='<'?'&lt;':'&gt;');});}
+function mark(t){
+  var seen={};
+  return esc(t).replace(WRX,function(m){
+    if(seen[m])return m; seen[m]=1;
+    return '<i class="gw" data-w="'+m+'">'+m+'</i>';
+  });
+}
+var WSEEN={}, LOG=[], CUR={who:null,txt:null}, wTO=null;
+function wplate(w){
+  if(!WORDS[w])return;
+  elW.innerHTML='<b>'+w+'</b>'+WORDS[w];
+  elW.classList.add('on');
+  if(wTO)clearTimeout(wTO);
+  wTO=setTimeout(function(){elW.classList.remove('on');},4400);
+  ttak();
+}
+function hideW(){ elW.classList.remove('on'); }
+function autoWord(){
+  try{
+    var g=elTxt.querySelectorAll('.gw');
+    for(var i=0;i<g.length;i++){
+      var w=g[i].getAttribute('data-w');
+      if(!WSEEN[w]){ WSEEN[w]=1; wplate(w); return; }
+    }
+  }catch(e){}
+}
+function tapWord(e){
+  var t=e.target; if(!t||!t.closest)return false;
+  var w=t.closest('.gw');
+  if(w){ e.stopPropagation(); wplate(w.getAttribute('data-w')); return true; }
+  return false;
+}
+elTxt.addEventListener('click',tapWord);
+elWho.addEventListener('click',tapWord);
+
 var SEEN={}, plateTO=null;
 function showPlate(who){
   if(!INTRO[who])return;
@@ -483,16 +598,19 @@ var CIRC=['①','②','③','④','⑤','⑥','⑦'];
 
 function sayUI(who,txt){
   SPEAK=who; MODE='say'; clearStay();
-  elWho.textContent=who+' —'; elTxt.textContent=txt; elCue.hidden=false;
-  if(INTRO[who] && !SEEN[who]){ SEEN[who]=1; showPlate(who); }
-  setActions([]);
+  CUR.who=who; CUR.txt=txt;
+  LOG.push([who,txt]); if(LOG.length>90)LOG.shift();
+  elWho.innerHTML=mark(who)+' —'; elTxt.innerHTML=mark(txt); elCue.hidden=false;
+  if(INTRO[who] && !SEEN[who]){ SEEN[who]=1; WSEEN[who]=1; showPlate(who); }
+  else autoWord();
+  setActions(navBtns());
 }
 function say(who,txt,fx){return function(){ if(fx)try{fx()}catch(e){} sayUI(who,txt); };}
 function setActions(list){
   elAct.innerHTML='';
   list.forEach(function(b){
     var el=document.createElement('button');
-    el.className='act'+(b.hot?' hot':''); el.type='button'; el.textContent=b.label;
+    el.className='act'+(b.hot?' hot':'')+(b.nav?' nav':''); el.type='button'; el.textContent=b.label;
     if(b.fast){
       el.addEventListener('pointerdown',function(ev){ev.preventDefault();ev.stopPropagation(); el._pd=Date.now(); b.fn(el);});
       el.addEventListener('click',function(ev){ev.stopPropagation(); if(Date.now()-(el._pd||0)<400)return; b.fn(el);});
@@ -637,7 +755,7 @@ function nextScene(){
   if(sc.card){ showCard(sc); } else { beginScene(sc); }
 }
 function beginScene(sc){
-  hideOvl(); hidePlate(); clearStay(); clearCast(); FX={}; sc._i=null; sc._g=false;
+  hideOvl(); hidePlate(); hideW(); clearStay(); clearCast(); FX={}; sc._i=null; sc._g=false;
   try{sc.setup()}catch(e){}
   nextStep();
 }
@@ -651,7 +769,8 @@ function showGloss(sc){
   MODE='gloss'; sc._g=true; hidePlate(); clearStay();
   elCue.hidden=true; elWho.textContent=''; elTxt.textContent='';
   ovl('<div class="ov-eyebrow">산받이의 귀띔</div><div class="gloss">'+sc.gloss+'</div>');
-  setActions([{label:'다음 거리로',hot:true,fn:function(){buk(); nextScene();}}]);
+  setActions([{label:'다음 거리로',hot:true,fn:function(){buk(); nextScene();}},
+              {label:'거리 고르기',nav:true,fn:function(){showMenu(function(){showGloss(sc);});}}]);
 }
 function showTerms(from){
   MODE='terms'; elCue.hidden=true; hidePlate(); clearStay();
@@ -676,19 +795,67 @@ function updateProg(){
     elPname.textContent=CIRC[scIdx]+' '+DIST[scIdx]+(scIdx<4?' · 첫째 마당':' · 둘째 마당');
   }else elPname.textContent='';
 }
-function ovl(html){elOvl.innerHTML=html; elOvl.hidden=false;}
-function hideOvl(){elOvl.hidden=true;}
+function ovl(html,sc){elOvl.innerHTML=html; elOvl.classList.toggle('scrolly',!!sc); elOvl.hidden=false;}
+function hideOvl(){elOvl.hidden=true; elOvl.classList.remove('scrolly');}
+
+/* ---------- v5: 지난 대사 · 거리 고르기 ---------- */
+function navBtns(){
+  return [{label:'지난 대사',nav:true,fn:function(){showLog();}},
+          {label:'거리 고르기',nav:true,fn:function(){showMenu(resumeSay);}}];
+}
+function resumeSay(){
+  hideOvl(); MODE='say'; elCue.hidden=false;
+  elWho.innerHTML=CUR.who?mark(CUR.who)+' —':'';
+  elTxt.innerHTML=CUR.txt?mark(CUR.txt):'';
+  setActions(navBtns());
+}
+function showLog(){
+  MODE='log'; elCue.hidden=true; hidePlate(); hideW(); clearStay();
+  var h='<div class="ov-eyebrow">지난 대사 — 짚으면 낱말 뜻</div><div class="loglist">';
+  if(!LOG.length) h+='<p>아직 지나간 대사가 없소.</p>';
+  LOG.forEach(function(l){ h+='<p><b>'+esc(l[0])+'</b>'+mark(l[1])+'</p>'; });
+  h+='</div>';
+  ovl(h,true);
+  setActions([{label:'돌아가기',hot:true,fn:resumeSay}]);
+  try{ elOvl.scrollTop=elOvl.scrollHeight; }catch(e){}
+}
+function showMenu(back){
+  MODE='menu'; elCue.hidden=true; hidePlate(); hideW(); clearStay();
+  function row(i){
+    return '<button class="mrow'+(i===scIdx?' now':'')+'" type="button" data-go="'+(i+1)+'">'+
+      '<span class="no">'+CIRC[i]+'</span>'+DIST[i]+'</button>';
+  }
+  var h='<div class="ov-eyebrow">거리 고르기</div><div class="mlist">'+
+        '<div class="mh">첫째 마당 · 박첨지 마당</div>'+row(0)+row(1)+row(2)+row(3)+
+        '<div class="mh">둘째 마당 · 평안감사 마당</div>'+row(4)+row(5)+row(6)+
+        '<div class="mh">마무리</div>'+
+        '<button class="mrow" type="button" data-go="q"><span class="no">⑧</span>관객 문답 · 다섯 고개</button>'+
+        '</div>';
+  ovl(h,true);
+  setActions([{label:'돌아가기',fn:back||resumeSay}]);
+}
+elOvl.addEventListener('click',function(e){
+  var t=e.target; if(!t||!t.closest)return;
+  var g=t.closest('[data-go]');
+  if(g){
+    var v=g.getAttribute('data-go'); buk();
+    if(v==='q'){ hideOvl(); startQuiz(); } else { jump(+v); }
+    return;
+  }
+  tapWord(e);
+});
 
 function showTitle(){
-  MODE='title'; scIdx=-1; clearCast(); FX={}; SEEN={}; hidePlate(); clearStay();
+  MODE='title'; scIdx=-1; clearCast(); FX={}; SEEN={}; WSEEN={}; LOG.length=0; hidePlate(); hideW(); clearStay();
   SCORE=0; updScore();
   updateProg(); elProg.innerHTML=''; elPname.textContent='';
   elWho.textContent=''; elCue.hidden=true;
   elTxt.textContent='포장 뒤 대잡이가 인형을 들고, 앞에 앉은 산받이가 말을 받는다 — 지금부터 당신이 그 관객이오.';
   ovl('<div class="ov-eyebrow">남사당놀이 덜미 · 전승 두 마당 일곱 거리</div>'+
       '<h1>꼭두각시<span class="red">놀음</span></h1>'+
-      '<div class="ov-sub">사백 년째 흥행 중인 남사당 덜미.<br>공연 보러 오기 전에, 일곱 거리쯤은 익혀 오시오.<br>잘 놀수록 엽전이 쌓이오.</div>');
-  setActions([{label:'덜미 올리기',hot:true,fn:function(){buk(); learn('덜미'); nextScene();}}]);
+      '<div class="ov-sub">사백 년째 흥행 중인 남사당 덜미.<br>공연 보러 오기 전에, 일곱 거리쯤은 익혀 오시오.<br>모르는 말은 <b>점선 친 낱말</b>을 짚으면 뜻이 나오오.</div>');
+  setActions([{label:'덜미 올리기',hot:true,fn:function(){buk(); learn('덜미'); nextScene();}},
+              {label:'거리 고르기',nav:true,fn:function(){showMenu(showTitle);}}]);
 }
 
 /* ---------- 관객 문답(다섯 고개) ---------- */
@@ -706,7 +873,7 @@ function startQuiz(){
 function showQuiz(){
   MODE='quiz'; elCue.hidden=true; qTry=false;
   var q=QUIZ[QI];
-  elWho.textContent='산받이 —'; elTxt.textContent='문답 '+(QI+1)+' / '+QUIZ.length+' — 첫 번에 맞히면 엽전 스무 닢이오.';
+  elWho.innerHTML=mark('산받이')+' —'; elTxt.textContent='문답 '+(QI+1)+' / '+QUIZ.length+' — 첫 번에 맞히면 엽전 스무 닢이오.';
   ovl('<div class="ov-eyebrow">관객 문답 · 다섯 고개</div><div class="gloss">'+q[0]+'</div>');
   setActions(q[1].map(function(opt,idx){ return {label:opt,fn:function(){answer(idx);}}; }));
 }
@@ -914,7 +1081,7 @@ function update(){
 function loop(ts){ T=ts||0; update(); bg(); drawFX(); requestAnimationFrame(loop); }
 
 /* ---------- 시작 ---------- */
-function jump(n){ hideOvl(); clearStay(); scIdx=n-1; updateProg(); var sc=SCENES[scIdx]; clearCast(); FX={}; sc._i=null; sc._g=false;
+function jump(n){ hideOvl(); clearStay(); hidePlate(); hideW(); scIdx=n-1; updateProg(); var sc=SCENES[scIdx]; clearCast(); FX={}; sc._i=null; sc._g=false;
   try{sc.setup()}catch(e){} nextStep(); }
 function boot(d){
   requestAnimationFrame(loop); updScore();
