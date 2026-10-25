@@ -108,6 +108,9 @@ button.act.nav{font-size:12px;padding:6px 13px;min-width:0;background:transparen
   border:2px solid var(--dim);box-shadow:none}
 button.act.nav:active{transform:translate(1px,1px);box-shadow:none}
 #ovl.scrolly{justify-content:flex-start}
+#ovl.title{background:rgba(13,11,8,.58)}
+.show{display:inline-block;margin-top:6px;color:#c9a227;font-size:13px;letter-spacing:.04em}
+footer a{color:#9a8d74}
 .mlist{display:flex;flex-direction:column;gap:5px;width:min(330px,96%);text-align:left}
 .mh{font-size:11px;color:var(--dim);letter-spacing:2px;margin-top:7px}
 button.mrow{font-family:inherit;font-size:13px;padding:8px 10px;background:#1d1711;color:var(--paper);
@@ -145,12 +148,14 @@ button.mrow:active{transform:translate(1px,1px)}
   <footer>대사는 화면이나 글상자를 짚으면 넘어갑니다 (키보드: Space)<br>
   <span style="color:#b5402e">점선 친 낱말</span>을 짚으면 뜻이 뜹니다 · 놓친 대사는 &lsquo;지난 대사&rsquo;, 건너뛰려면 &lsquo;거리 고르기&rsquo;<br>
   전승 구성 — 첫째 마당: 박첨지유람·피조리·꼭두각시·이시미 / 둘째 마당: 매사냥·상여·절 짓고 허는 거리<br>
-  국가무형유산 남사당놀이의 인형극 '덜미'를 바탕으로 함 · 서체: Galmuri(자유 서체)</footer>
+  국가무형유산 남사당놀이의 인형극 '덜미'를 바탕으로 함 · 서체: Galmuri(자유 서체)<br>
+  <a href="./show/">공연 안내 — 12.11(금)·12(토) 김희수아트센터 SPACE1, 무료</a></footer>
 </div>
 
 <script>
 (function(){
 "use strict";
+var SHOW_URL='./show/'; // 공연 상세페이지
 var FORCE_GO=0; // render-debug
 try{var qm=location.search.match(/go=(\d)/); if(qm) FORCE_GO=+qm[1];}catch(e){}
 var RM=false; try{RM=matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
@@ -795,7 +800,7 @@ function updateProg(){
     elPname.textContent=CIRC[scIdx]+' '+DIST[scIdx]+(scIdx<4?' · 첫째 마당':' · 둘째 마당');
   }else elPname.textContent='';
 }
-function ovl(html,sc){elOvl.innerHTML=html; elOvl.classList.toggle('scrolly',!!sc); elOvl.hidden=false;}
+function ovl(html,sc){elOvl.innerHTML=html; elOvl.classList.toggle('scrolly',!!sc); elOvl.classList.remove('title'); elOvl.hidden=false;}
 function hideOvl(){elOvl.hidden=true; elOvl.classList.remove('scrolly');}
 
 /* ---------- v5: 지난 대사 · 거리 고르기 ---------- */
@@ -847,15 +852,19 @@ elOvl.addEventListener('click',function(e){
 
 function showTitle(){
   MODE='title'; scIdx=-1; clearCast(); FX={}; SEEN={}; WSEEN={}; LOG.length=0; hidePlate(); hideW(); clearStay();
+  cast('park','park',64,{amp:1.5}); cast('kkok','kkok',256,{amp:1.5,flip:1});
   SCORE=0; updScore();
   updateProg(); elProg.innerHTML=''; elPname.textContent='';
   elWho.textContent=''; elCue.hidden=true;
   elTxt.textContent='포장 뒤 대잡이가 인형을 들고, 앞에 앉은 산받이가 말을 받는다 — 지금부터 당신이 그 관객이오.';
   ovl('<div class="ov-eyebrow">남사당놀이 덜미 · 전승 두 마당 일곱 거리</div>'+
       '<h1>꼭두각시<span class="red">놀음</span></h1>'+
-      '<div class="ov-sub">사백 년째 흥행 중인 남사당 덜미.<br>공연 보러 오기 전에, 일곱 거리쯤은 익혀 오시오.<br>모르는 말은 <b>점선 친 낱말</b>을 짚으면 뜻이 나오오.</div>');
+      '<div class="ov-sub">사백 년째 흥행 중인 남사당 덜미.<br>공연 보러 오기 전에, 일곱 거리쯤은 익혀 오시오.<br>모르는 말은 <b>점선 친 낱말</b>을 짚으면 뜻이 나오오.<br>'+
+      '<span class="show">12.11(금) 19:30 · 12.12(토) 15:00 · 김희수아트센터</span></div>');
+  elOvl.classList.add('title');
   setActions([{label:'덜미 올리기',hot:true,fn:function(){buk(); learn('덜미'); nextScene();}},
-              {label:'거리 고르기',nav:true,fn:function(){showMenu(showTitle);}}]);
+              {label:'거리 고르기',nav:true,fn:function(){showMenu(showTitle);}},
+              {label:'공연 안내',nav:true,fn:function(){buk(); location.href=SHOW_URL;}}]);
 }
 
 /* ---------- 관객 문답(다섯 고개) ---------- */
@@ -902,9 +911,11 @@ function ending(){
   ovl('<div class="ov-eyebrow">준비된 관객 — 인증</div><h1>덜미 한 판, <span class="red">끝.</span></h1>'+
       '<ul>'+list+'</ul>'+
       '<div class="ov-sub">구경값 엽전 <b>'+SCORE+'닢</b> · 남사당 서열로 치면 <b>'+rank[0]+'</b><br>'+rank[1]+'</div>'+
-      '<div class="ov-sub">꼭두각시놀음은 지금도 공연 중이니 — 진짜 포장 앞에서 봅시다.</div>');
-  setActions([{label:'처음부터 다시',fn:function(){showTitle();}},
-              {label:'말 풀이',fn:function(){showTerms('end');}}]);
+      '<div class="ov-sub">꼭두각시놀음은 지금도 공연 중이니 — 진짜 포장 앞에서 봅시다.<br>'+
+      '<span class="show">12.11(금) 19:30 · 12.12(토) 15:00<br>김희수아트센터 SPACE1 · 무료</span></div>');
+  setActions([{label:'공연 보러 가기',hot:true,fn:function(){buk(); location.href=SHOW_URL;}},
+              {label:'처음부터 다시',nav:true,fn:function(){showTitle();}},
+              {label:'말 풀이',nav:true,fn:function(){showTerms('end');}}]);
 }
 
 /* ---------- 대본: 두 마당 일곱 거리 ---------- */

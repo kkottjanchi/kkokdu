@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>스탠드업 × 꼭두각시 — 2026.12.11–12 김희수아트센터</title>
+<meta name="description" content="수림문화재단 2026 창작랩. 남사당 덜미(꼭두각시놀음) 두 마당 일곱 거리를 스탠드업 코미디언과 남사당 전수자가 다시 읽는다. 12월 11일(금) 19:30 · 12일(토) 15:00, 김희수아트센터 SPACE1, 무료.">
+<meta property="og:title" content="스탠드업 × 꼭두각시">
+<meta property="og:description" content="12.11(금) 19:30 · 12.12(토) 15:00 김희수아트센터 SPACE1 · 무료">
+<meta property="og:image" content="https://play.survivingtraditions.com/show/gaksi.jpg">
+<link rel="icon" href="../icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* 게임과 같은 세계: 밤마당의 포장무대 — 먹 바탕 + 한지 + 단청red */
+:root{
+  --bg:#17130d; --paper:#e8dcc3; --ink:#241e16; --accent:#b5402e; --dim:#9a8d74;
+  --gold:#c9a227; --line:#3a3226;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--paper);
+  font-family:'Gowun Batang',serif; font-size:17px; line-height:1.75;
+  word-break:keep-all; overflow-wrap:break-word; -webkit-font-smoothing:antialiased;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:50; opacity:.09;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+.wrap{max-width:600px;margin:0 auto;padding:28px 0 90px}
+
+.mono{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+
+/* 상단 줄 — 게임 topbar와 같은 형식 */
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:26px}
+.top a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line);font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em}
+
+/* 히어로 */
+.hero{border:3px solid #000;box-shadow:0 0 0 1px var(--line),6px 6px 0 rgba(0,0,0,.6);background:#0d0b08;position:relative;overflow:hidden}
+.hero img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;filter:saturate(.92)}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,rgba(0,0,0,.13) 0 1px,transparent 1px 3px)}
+.hero .cap{position:absolute;left:0;right:0;bottom:0;padding:14px 16px 12px;
+  background:linear-gradient(to top,rgba(13,11,8,.92),rgba(13,11,8,0));font-size:12px;color:var(--dim);letter-spacing:.06em}
+
+h1{margin:30px 0 6px;font-size:clamp(40px,11vw,66px);line-height:1.04;font-weight:700;letter-spacing:-.02em}
+h1 .x{color:var(--accent);font-weight:400;margin:0 .08em}
+.tnote{font-size:13px;color:var(--dim);margin:0 0 22px}
+.tnote b{color:var(--gold);font-weight:400}
+
+/* 날짜·장소 — 가장 큰 한 덩어리 */
+.when{background:var(--paper);color:var(--ink);border:3px solid #000;box-shadow:4px 4px 0 rgba(0,0,0,.55);padding:18px 20px 16px;margin:0 0 14px}
+.when .d{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-bottom:1px solid rgba(36,30,22,.18)}
+.when .d:last-of-type{border-bottom:0}
+.when .d b{font-size:clamp(22px,6vw,30px);font-weight:700;letter-spacing:-.01em}
+.when .d span{font-size:15px;color:#6b5a45}
+.when .d i{font-style:normal;color:var(--accent);font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em}
+.when .place{margin-top:12px;padding-top:12px;border-top:3px solid var(--ink);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.when .place b{font-size:19px;font-weight:700}
+.when .place a{color:var(--accent);font-size:13px;text-decoration:none;border-bottom:1px solid var(--accent);font-family:'IBM Plex Mono',monospace;letter-spacing:.08em}
+.free{display:inline-block;background:var(--accent);color:var(--paper);padding:2px 10px;font-size:13px;letter-spacing:.1em;margin-left:6px;vertical-align:3px}
+
+/* 사실 표 */
+table{width:100%;border-collapse:collapse;margin:0 0 30px;font-size:14.5px;text-align:center}
+th,td{border:1px solid var(--line);padding:9px 10px;vertical-align:middle}
+th{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;font-weight:600;color:var(--dim);background:#1d1711;width:34%}
+td .soon{color:var(--dim);font-size:13px}
+
+/* 버튼 — 게임 .act 그대로 */
+.act{display:block;width:100%;text-align:center;font-family:inherit;font-size:17px;padding:14px 20px;
+  background:var(--paper);color:var(--ink);border:3px solid #000;box-shadow:3px 3px 0 #000;text-decoration:none;
+  cursor:pointer;margin:0 0 12px;transition:transform .05s}
+.act:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #000}
+.act.hot{background:var(--accent);color:var(--paper)}
+.act.dim{background:transparent;color:var(--dim);border-color:var(--dim);box-shadow:none;font-size:14px;padding:11px 16px}
+.act small{display:block;font-size:12px;opacity:.75;margin-top:2px;letter-spacing:.04em}
+
+h2{margin:58px 0 10px;font-size:clamp(22px,5vw,27px);font-weight:700;line-height:1.25}
+h2 .n{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--accent);margin-bottom:8px;font-weight:600}
+p{margin:0 0 14px;max-width:40em}
+p.dimtext{color:var(--dim);font-size:15px}
+
+blockquote{margin:22px 0;padding:16px 18px;background:var(--paper);color:var(--ink);border:3px solid #000;box-shadow:4px 4px 0 rgba(0,0,0,.55);
+  font-size:clamp(19px,4.6vw,24px);line-height:1.5;font-weight:700;letter-spacing:-.01em}
+blockquote cite{display:block;font-style:normal;font-weight:400;font-size:12px;color:#6b5a45;margin-top:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em}
+
+/* 일곱 거리 */
+ol.dist{list-style:none;padding:0;margin:14px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+ol.dist li{background:var(--bg);padding:11px 12px;font-size:14px;line-height:1.5}
+ol.dist li i{font-style:normal;color:var(--accent);margin-right:7px;font-family:'IBM Plex Mono',monospace;font-size:12px}
+ol.dist li.m{grid-column:1/-1;background:#1d1711;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--dim);padding:7px 12px}
+@media(max-width:380px){ol.dist{grid-template-columns:1fr}}
+
+/* 팀 */
+.team{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:14px}
+.team div{background:var(--bg);padding:14px 13px}
+.team b{display:block;font-size:17px;margin-bottom:3px}
+.team span{font-size:13px;color:var(--dim);line-height:1.5}
+@media(max-width:380px){.team{grid-template-columns:1fr}}
+
+footer{margin-top:80px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:#6e6350;line-height:1.8}
+footer a{color:#6e6350}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="top">
+  <span class="mono">수림문화재단 2026 창작랩</span>
+  <a href="../">← 예습 게임</a>
+</div>
+
+<div class="hero">
+  <img src="gaksi.jpg" alt="꼭두각시 인형 — 땋은 머리에 다홍 댕기, 분홍 저고리에 자주 고름" width="640" height="640">
+  <div class="cap">꼭두각시 — 이 놀음의 제목이 된 인형</div>
+</div>
+
+<h1 id="t">스탠드업<span class="x">×</span>꼭두각시</h1>
+<p class="tnote" id="tnote"></p>
+
+<div class="when">
+  <div class="d"><b>12월 11일 <span>금요일</span></b><i>19:30</i></div>
+  <div class="d"><b>12월 12일 <span>토요일</span></b><i>15:00</i></div>
+  <div class="place">
+    <b>김희수아트센터 SPACE1<span class="free">무료</span></b>
+    <a href="https://map.naver.com/p/search/%EA%B9%80%ED%9D%AC%EC%88%98%EC%95%84%ED%8A%B8%EC%84%BC%ED%84%B0" target="_blank" rel="noopener">지도</a>
+  </div>
+</div>
+
+<table>
+  <tr><th>예매</th><td id="ticket"></td></tr>
+  <tr><th>러닝타임</th><td id="runtime"></td></tr>
+  <tr><th>관람연령</th><td id="age"></td></tr>
+  <tr><th>주최·지원</th><td>수림문화재단</td></tr>
+</table>
+
+<a class="act hot" id="ticketBtn" href="#" hidden>예매하기</a>
+<a class="act" href="../">공연 전에 일곱 거리 익히기<small>예습 게임 · 10분 · 무료</small></a>
+
+<h2><span class="n">01</span>무슨 공연인가</h2>
+<p>사백 년째 전해 오는 남사당 인형극 <b>덜미</b>, 흔히 <b>꼭두각시놀음</b>이라 부르는 그 놀음을 재료로 합니다. 전승 두 마당 일곱 거리에 박첨지·홍동지·덜머리집·이시미가 차례로 나오는데, 제목에 이름이 걸린 <b>꼭두각시</b>는 그중 한 거리에만 나옵니다.</p>
+<p>이 자리에서는 남사당 전수자와 스탠드업 코미디언 둘이 그 일곱 거리를 다시 읽습니다.</p>
+
+<blockquote>박첨지는 이미 충분히 써먹혔다.<br>지금까지의 각색은 박첨지전, 홍동지전이었다.<cite>최샘이 · 창작랩 과제 발표문</cite></blockquote>
+
+<p>이 놀음은 지금도 공연 중입니다. 다만 열 사람 중 아홉은 일곱 거리가 뭔지 모른 채 객석에 앉습니다. 그래서 공연 전에 예습할 게임을 하나 두었습니다 — 10분이면 일곱 거리와 인물을 다 만납니다.</p>
+
+<h2><span class="n">02</span>전승 두 마당 일곱 거리</h2>
+<p class="dimtext">이 공연이 재료로 삼는 원전의 구성입니다. 게임에서 거리마다 하나씩 놀아볼 수 있습니다.</p>
+<ol class="dist">
+  <li class="m">첫째 마당 · 박첨지 마당</li>
+  <li><i>①</i>박첨지 유람거리</li>
+  <li><i>②</i>피조리거리</li>
+  <li><i>③</i>꼭두각시거리</li>
+  <li><i>④</i>이시미거리</li>
+  <li class="m">둘째 마당 · 평안감사 마당</li>
+  <li><i>⑤</i>매사냥거리</li>
+  <li><i>⑥</i>상여거리</li>
+  <li><i>⑦</i>절 짓고 허는 거리</li>
+</ol>
+
+<h2><span class="n">03</span>만드는 사람들</h2>
+<div class="team">
+  <div><b>최샘이</b><span>기획 · 드라마터그</span></div>
+  <div><b>박용화</b><span>남사당 전수자 · 꼭두각시</span></div>
+  <div><b>고은별</b><span>스탠드업 코미디 · 블러드퍼니</span></div>
+  <div><b>김보은</b><span>스탠드업 코미디 · 블러드퍼니</span></div>
+</div>
+
+<h2><span class="n">04</span>오시는 길</h2>
+<p><b>김희수아트센터 SPACE1</b> — <a href="https://map.naver.com/p/search/%EA%B9%80%ED%9D%AC%EC%88%98%EC%95%84%ED%8A%B8%EC%84%BC%ED%84%B0" target="_blank" rel="noopener" style="color:var(--accent)">네이버 지도에서 열기</a></p>
+<p class="dimtext">무료 공연입니다. 예매가 열리면 이 페이지 맨 위 '예매하기' 단추가 켜집니다.</p>
+
+<a class="act dim" href="../">예습 게임으로 돌아가기</a>
+
+<footer>
+  국가무형유산 남사당놀이의 인형극 '덜미'를 바탕으로 함 · 수림문화재단 2026 창작랩<br>
+  <a href="https://play.survivingtraditions.com/">play.survivingtraditions.com</a>
+</footer>
+</div>
+
+<script>
+/* ===== 정해지면 여기 한 줄씩만 고치면 됩니다 ===== */
+var SHOW={
+  title:'',          // 공연 제목이 정해지면 적기. 비우면 '스탠드업 × 꼭두각시' 그대로
+  titleNote:'가제',  // 제목 확정되면 '' 로
+  runtime:'',        // 예: '60분'
+  age:'',            // 예: '전체 관람가'
+  ticketUrl:'',      // 재단 네이버 예약 링크. 넣으면 '예매하기' 단추가 켜짐
+  ticketNote:'무료 · 수림문화재단 네이버 예약 · 오픈 일정은 곧 공지'
+};
+/* ============================================== */
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  if(SHOW.title) $('t').textContent=SHOW.title;
+  $('tnote').innerHTML = SHOW.titleNote ? '<b>'+SHOW.titleNote+'</b> — 공연 제목은 곧 정해집니다' : '';
+  $('runtime').innerHTML = SHOW.runtime || '<span class="soon">곧 공개</span>';
+  $('age').innerHTML     = SHOW.age     || '<span class="soon">곧 공개</span>';
+  if(SHOW.ticketUrl){
+    $('ticket').innerHTML='무료 · <a href="'+SHOW.ticketUrl+'" style="color:var(--accent)">네이버 예약</a>';
+    var b=$('ticketBtn'); b.href=SHOW.ticketUrl; b.hidden=false;
+  }else{
+    $('ticket').textContent=SHOW.ticketNote;
+  }
+})();
+</script>
+</body>
+</html>
